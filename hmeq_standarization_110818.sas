@@ -12,7 +12,7 @@ print "Input table: "||"Public"||"."||"HMEQ"||" found.";
 
 
 dataStep.runCode result=r status=rc / code='/* BEGIN data step with the output table                                           data */
-data "HMEQ_1" (caslib="Public" promote="no");
+data "ef557d39-5f95-40cd-b347-41bb384e68bd" (caslib="Public" promote="no");
 
     length
        "REASON_MATCH"n varchar(256)
@@ -36,8 +36,27 @@ if rc.statusCode != 0 then do;
   print "Error executing datastep";
   exit 2;
 end;
+/* BEGIN statement 16c9cd7f-a6c1-4854-a06a-80907db8d062                     dqcluster */
 
-dropTableIfExists("Public", "b4f4e6c1-f73a-4503-8dee-9f36ce822ab2");
+entityRes.match  result=r status=rc /
+     clusterId="Cluster ID"
+     inTable={caslib="Public",name="ef557d39-5f95-40cd-b347-41bb384e68bd"}
+     matchRules={
+      { rule = {
+        {columns = { "REASON_MATCH"}}
+      }}
+     }
+     nullValuesMatch=false
+     emptyStringIsNull=true
+     outTable={caslib="Public",name="HMEQ_1", replace=true};
+
+if rc.statusCode != 0 then do;
+   return rc.statusCode;
+end;
+
+/* END statement 16c9cd7f-a6c1-4854-a06a-80907db8d062                       dqcluster */
+
+dropTableIfExists("Public", "ef557d39-5f95-40cd-b347-41bb384e68bd");
 
 function doesTableExist(casLib, casTable);
   table.tableExists result=r status=rc / caslib=casLib table=casTable;
