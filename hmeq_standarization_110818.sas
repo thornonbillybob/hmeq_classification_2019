@@ -14,6 +14,9 @@ print "Input table: "||"Public"||"."||"HMEQ"||" found.";
 dataStep.runCode result=r status=rc / code='/* BEGIN data step with the output table                                           data */
 data "HMEQ_1" (caslib="Public" promote="no");
 
+    length
+       "REASON_MATCH"n varchar(256)
+    ;
 
     /* Set the input                                                                set */
     set "HMEQ" (caslib="Public"  );
@@ -21,6 +24,10 @@ data "HMEQ_1" (caslib="Public" promote="no");
     /* BEGIN statement 4093b46f_3c42_417d_bbf0_dae694d89ca3                      casing */
     "REASON"n = kupcase("REASON"n);
     /* END statement 4093b46f_3c42_417d_bbf0_dae694d89ca3                        casing */
+
+    /* BEGIN statement 1860e0c9_0597_4b71_8d5a_07174aba9eff                     dqmatch */
+    "REASON_MATCH"n = dqmatch ("REASON"n, "Organization", 85, "ENUSA");
+    /* END statement 1860e0c9_0597_4b71_8d5a_07174aba9eff                       dqmatch */
 
 /* END data step                                                                    run */
 run;
@@ -30,7 +37,7 @@ if rc.statusCode != 0 then do;
   exit 2;
 end;
 
-dropTableIfExists("Public", "a2a80ed9-fa60-4819-87c2-ba0662bf8d8f");
+dropTableIfExists("Public", "b4f4e6c1-f73a-4503-8dee-9f36ce822ab2");
 
 function doesTableExist(casLib, casTable);
   table.tableExists result=r status=rc / caslib=casLib table=casTable;
